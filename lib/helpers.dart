@@ -2,7 +2,8 @@ import 'dart:convert' as Convert;
 import 'dart:math';
 import 'package:json_ast/json_ast.dart'
     show Node, ObjectNode, ArrayNode, LiteralNode, PropertyNode;
-import 'package:json_to_dart/syntax.dart';
+
+import 'syntax.dart';
 
 const Map<String, bool> PRIMITIVE_TYPES = const {
   'int': true,
@@ -218,6 +219,25 @@ String getTypeName(dynamic obj) {
   } else {
     // assumed class
     return 'Class';
+  }
+}
+
+dynamic getTypeInitValue(String obj) {
+  if (obj == 'String') {
+    return '\'\'';
+  } else if (obj == 'int') {
+    return 0;
+  } else if (obj == 'double') {
+    return 0.0;
+  } else if (obj == 'bool') {
+    return false;
+  } else if (obj == 'null') {
+    return null;
+  } else if (obj == 'List') {
+    return [];
+  } else {
+    // assumed class
+    return null;
   }
 }
 
