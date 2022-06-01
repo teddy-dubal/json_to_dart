@@ -8,6 +8,7 @@ dependencies:
   json_ast: "^1.0.6"
   convert: "^3.0.1"
   dart_style: "^2.2.1"
+  args: ^2.3.1
 
 dev_dependencies:
   test: "^1.20.1"

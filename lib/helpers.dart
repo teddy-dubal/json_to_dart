@@ -221,6 +221,25 @@ String getTypeName(dynamic obj) {
   }
 }
 
+dynamic getTypeInitValue(String obj) {
+  if (obj == 'String') {
+    return '\'\'';
+  } else if (obj == 'int') {
+    return 0;
+  } else if (obj == 'double') {
+    return 0.0;
+  } else if (obj == 'bool') {
+    return false;
+  } else if (obj == 'null') {
+    return null;
+  } else if (obj == 'List') {
+    return [];
+  } else {
+    // assumed class
+    return null;
+  }
+}
+
 Node? navigateNode(Node? astNode, String path) {
   Node? node;
   if (astNode is ObjectNode) {

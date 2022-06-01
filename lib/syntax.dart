@@ -229,6 +229,20 @@ class ClassDefinition {
     }).join('\n');
   }
 
+  String get _fieldListScreen {
+    return fields.keys.map((key) {
+      final f = fields[key]!;
+      final fieldName =
+          fixFieldName(key, typeDef: f, privateField: privateFields);
+      final sb = new StringBuffer();
+      sb.write('\t');
+      sb.write('static const ');
+      _addTypeDef(f, sb);
+      sb.write('? $fieldName;');
+      return sb.toString();
+    }).join('\n');
+  }
+
   String get _gettersSetters {
     return fields.keys.map((key) {
       final f = fields[key]!;
@@ -297,6 +311,101 @@ class ClassDefinition {
     return sb.toString();
   }
 
+  String get _displayName {
+    final sb = new StringBuffer();
+    sb.write('\tString get displayName { return \'${name}\';}');
+    return sb.toString();
+  }
+
+  String get _builderConstructor {
+    final sb = new StringBuffer();
+    sb.write('\t${name}Entity._();');
+    return sb.toString();
+  }
+
+  String get _factory {
+    final sb = new StringBuffer();
+    sb.write('\tfactory ${name}Entity(){');
+    sb.write('\t\treturn _\$${name}Entity._(');
+    var i = 0;
+    var len = fields.keys.length - 1;
+    fields.keys.forEach((key) {
+      final f = fields[key]!;
+      final fieldName =
+          fixFieldName(key, typeDef: f, privateField: privateFields);
+      sb.write('${fieldName} : ${getTypeInitValue(f.name)}');
+      if (i != len) {
+        sb.write(', ');
+      }
+      i++;
+    });
+    sb.write(');}');
+    return sb.toString();
+  }
+
+  String get _serializer {
+    final sb = new StringBuffer();
+    sb.write(
+        '\tstatic Serializer<${name}Entity> get serializer => _\$${name.toLowerCase()}EntitySerializer;');
+    return sb.toString();
+  }
+
+  String get _compareTo {
+    final sb = new StringBuffer();
+    String nameMinus = name.toLowerCase();
+    sb.write(
+        '\tint compareTo(${name}Entity ${nameMinus}, String sortField, bool sortAscending) {');
+    sb.write('int response = 0;');
+    sb.write(
+        '${name}Entity ${nameMinus}A = sortAscending ? this : ${nameMinus};');
+    sb.write(
+        '${name}Entity ${nameMinus}B = sortAscending ? ${nameMinus} : this;');
+    sb.write('switch (sortField) {');
+    fields.keys.forEach((key) {
+      final f = fields[key]!;
+      final fieldName =
+          fixFieldName(key, typeDef: f, privateField: privateFields);
+      sb.write('case ${name}Fields.$fieldName:');
+      sb.write(
+          'response = ${nameMinus}A.$fieldName.compareTo(${nameMinus}B.$fieldName);');
+      sb.write('break;');
+    });
+    final key = fields.keys.first;
+    final f = fields[key]!;
+    final fieldName =
+        fixFieldName(key, typeDef: f, privateField: privateFields);
+    sb.write('if (response == 0) {');
+    sb.write(
+        'return ${nameMinus}A.$fieldName.compareTo(${nameMinus}B.$fieldName);');
+    sb.write('} else {');
+    sb.write('return response;');
+    sb.write('}');
+    sb.write('}');
+    sb.write('}');
+    return sb.toString();
+  }
+
+  String get _matchesSearch {
+    final sb = new StringBuffer();
+    sb.write('@override');
+    sb.write('bool matchesSearch(String search) {');
+    sb.write('if (search == null || search.isEmpty) {');
+    sb.write('return true;');
+    sb.write('}');
+    sb.write('search = search.toLowerCase();');
+    fields.keys.forEach((key) {
+      final f = fields[key]!;
+      final fieldName =
+          fixFieldName(key, typeDef: f, privateField: privateFields);
+      sb.write('if (${fieldName}.toLowerCase().contains(search)) {');
+      sb.write('return true;');
+      sb.write('}');
+    });
+    sb.write('return false;');
+    sb.write('}');
+    return sb.toString();
+  }
+
   String get _jsonParseFunc {
     final sb = new StringBuffer();
     sb.write('\t$name');
@@ -324,7 +433,8 @@ class ClassDefinition {
     if (privateFields) {
       return 'class $name {\n$_fieldList\n\n$_defaultPrivateConstructor\n\n$_gettersSetters\n\n$_jsonParseFunc\n\n$_jsonGenFunc\n}\n';
     } else {
-      return 'class $name {\n$_fieldList\n\n$_defaultConstructor\n\n$_jsonParseFunc\n\n$_jsonGenFunc\n}\n';
+      // return 'class $name {\n$_fieldList\n\n$_defaultConstructor\n\n$_jsonParseFunc\n\n$_jsonGenFunc\n}\n';
+      return 'class ${name}Fields {\n $_fieldListScreen\n\n }\n abstract class ${name}Entity extends Object\nwith BaseEntity\nimplements Built<${name}Entity, ${name}EntityBuilder>{\n$_fieldList\n\n$_builderConstructor\n\n$_factory\n\n$_displayName\n\n$_compareTo\n\n$_matchesSearch\n\n$_serializer\n\n}\n';
     }
   }
 }
