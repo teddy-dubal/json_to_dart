@@ -1,0 +1,24 @@
+{
+  "uuid": "3eaff89d-0b6f-4b37-9ca2-8d52374b76c7",
+  "rs": "ambulances",
+  "firstname": "AMBULANCE",
+  "lastname": "SANIBEA",
+  "email": "sanibeaambulance@gmail.com",
+  "last_login": "2022-05-18T12:01:39+00:00",
+  "phone1": "+590690002361",
+  "phone2": "+590590869085",
+  "enabled": 2,
+  "id_pp": "333277168",
+  "address": "Rue Siméon Pioche, Centre Ville de Capesterre-Belle-Eau, Source Pérou, Capesterre-Belle-Eau, Basse-Terre, Guadeloupe, 97130, France",
+  "latitude": 16.049,
+  "longitude": -61.5652,
+  "created_at": "2022-01-31T16:15:07+00:00",
+  "updated_at": "2022-04-20T18:14:33+00:00",
+  "timezone": "America/Guadeloupe",
+  "birthday": "2019-05-08",
+  "profession": [
+    8
+  ],
+  "speciality": [],
+  "locale": "fr-fr"
+}
