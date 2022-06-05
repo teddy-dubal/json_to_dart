@@ -224,7 +224,7 @@ class ClassDefinition {
       final sb = new StringBuffer();
       sb.write('\t');
       _addTypeDef(f, sb);
-      sb.write('? $fieldName;');
+      sb.write(' get $fieldName;');
       return sb.toString();
     }).join('\n');
   }
@@ -236,9 +236,10 @@ class ClassDefinition {
           fixFieldName(key, typeDef: f, privateField: privateFields);
       final sb = new StringBuffer();
       sb.write('\t');
-      sb.write('static const ');
-      _addTypeDef(f, sb);
-      sb.write('? $fieldName;');
+      sb.write('static const String');
+      // _addTypeDef(f, sb);
+      // sb.write(' $fieldName = ${getTypeInitValue(f.name)};');
+      sb.write(' $fieldName = \'$fieldName\';');
       return sb.toString();
     }).join('\n');
   }
@@ -363,13 +364,16 @@ class ClassDefinition {
     sb.write('switch (sortField) {');
     fields.keys.forEach((key) {
       final f = fields[key]!;
-      final fieldName =
-          fixFieldName(key, typeDef: f, privateField: privateFields);
-      sb.write('case ${name}Fields.$fieldName:');
-      sb.write(
-          'response = ${nameMinus}A.$fieldName.compareTo(${nameMinus}B.$fieldName);');
-      sb.write('break;');
+      if (f.name == 'String') {
+        final fieldName =
+            fixFieldName(key, typeDef: f, privateField: privateFields);
+        sb.write('case ${name}Fields.$fieldName:');
+        sb.write(
+            'response = ${nameMinus}A.$fieldName.compareTo(${nameMinus}B.$fieldName);');
+        sb.write('break;');
+      }
     });
+    sb.write('}');
     final key = fields.keys.first;
     final f = fields[key]!;
     final fieldName =
@@ -381,13 +385,12 @@ class ClassDefinition {
     sb.write('return response;');
     sb.write('}');
     sb.write('}');
-    sb.write('}');
     return sb.toString();
   }
 
   String get _matchesSearch {
     final sb = new StringBuffer();
-    sb.write('@override');
+    sb.write('@override\n');
     sb.write('bool matchesSearch(String search) {');
     sb.write('if (search == null || search.isEmpty) {');
     sb.write('return true;');
@@ -395,11 +398,13 @@ class ClassDefinition {
     sb.write('search = search.toLowerCase();');
     fields.keys.forEach((key) {
       final f = fields[key]!;
-      final fieldName =
-          fixFieldName(key, typeDef: f, privateField: privateFields);
-      sb.write('if (${fieldName}.toLowerCase().contains(search)) {');
-      sb.write('return true;');
-      sb.write('}');
+      if (f.name == 'String') {
+        final fieldName =
+            fixFieldName(key, typeDef: f, privateField: privateFields);
+        sb.write('if (${fieldName}.toLowerCase().contains(search)) {');
+        sb.write('return true;');
+        sb.write('}');
+      }
     });
     sb.write('return false;');
     sb.write('}');
@@ -426,6 +431,24 @@ class ClassDefinition {
     });
     sb.write('\t\treturn data;\n');
     sb.write('\t}');
+    return sb.toString();
+  }
+
+  String getFields() {
+    final sb = new StringBuffer();
+    var i = 0;
+    var len = fields.keys.length - 1;
+    fields.keys.forEach((key) {
+      final f = fields[key]!;
+      final publicFieldName =
+          fixFieldName(key, typeDef: f, privateField: false);
+      sb.write('$publicFieldName:');
+      _addTypeDef(f, sb);
+      if (i != len) {
+        sb.write(',');
+      }
+      i++;
+    });
     return sb.toString();
   }
 
