@@ -1,0 +1,38 @@
+{
+  "id": 14,
+  "name": "Infirmier",
+  "status": 1,
+  "spec": 1,
+  "range": 15,
+  "at_home": 1,
+  "deleted": false,
+  "created_at": "2021-08-30 19:52:43",
+  "updated_at": "2022-02-21 13:01:38",
+  "cp": 60,
+  "order": 14,
+  "default_show": 1,
+  "daily": true,
+  "schedule": false,
+  "notes": false,
+  "speciality": [
+    {
+      "id": 1,
+      "name": "Toilettes",
+      "med_provider_id": null,
+      "created_at": null,
+      "updated_at": null
+    },
+    {
+      "id": 2,
+      "name": "Perfusion",
+      "med_provider_id": null,
+      "created_at": null,
+      "updated_at": null
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "http://api.lae.lan/back/profession/14"
+    }
+  }
+}

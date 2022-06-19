@@ -52,8 +52,10 @@ class Fields extends Command<int> {
       return ExitCode.usage.code;
     }
     final currentDirectory = p.dirname(_scriptPath());
-    final sourcePath = p.normalize(p.join(
-        currentDirectory, '..', '..', '..', '..', argResults?['source']));
+    // final sourcePath = p.normalize(p.join(
+    //     currentDirectory, '..', '..', '..', '..', argResults?['source']));
+    final sourcePath =
+        p.normalize(p.join(Directory.current.path, argResults?['source']));
     final classGenerator = new ModelGenerator(argResults?['classname']);
     final jsonRawData = new File(sourcePath).readAsStringSync();
     classGenerator.generateDartClasses(jsonRawData);
