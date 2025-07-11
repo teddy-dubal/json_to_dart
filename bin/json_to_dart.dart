@@ -4,11 +4,9 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:io/ansi.dart';
 import 'package:io/io.dart';
-import 'package:json_to_dart/json_to_dart.dart';
 import 'package:json_to_dart/src/entrypoint/options.dart';
 import 'package:json_to_dart/src/entrypoint/runner.dart';
 import 'package:logging/logging.dart';
-import 'package:path/path.dart';
 
 import 'src/commands/fields.dart';
 import 'src/commands/generate.dart';
