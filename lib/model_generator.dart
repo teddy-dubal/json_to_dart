@@ -150,7 +150,9 @@ class ModelGenerator {
   /// formatted JSON string. If the generated dart is invalid it will throw an error.
   DartCode generateDartClasses(String rawJson) {
     final unsafeDartCode = generateUnsafeDart(rawJson);
-    final formatter = new DartFormatter();
+    final formatter = new DartFormatter(
+      languageVersion: DartFormatter.latestLanguageVersion,
+    );
     return new DartCode(
         formatter.format(unsafeDartCode.code), unsafeDartCode.warnings);
   }
